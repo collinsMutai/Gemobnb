@@ -1,0 +1,84 @@
+/* ======================
+   GLOBAL RESET
+====================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+}
+
+/* ======================
+   ROOT THEME + DESIGN TOKENS
+====================== */
+
+:root {
+  /* TYPOGRAPHY */
+  --heading: "Marcellus", serif;
+  --sans: "Jost", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  /* ======================
+     COLOR PALETTE
+  ====================== */
+
+  --primary: #0f172a; /* Deep Navy */
+  --secondary: #14b8a6; /* Teal */
+  --accent: #f59e0b; /* Amber */
+  --background: #f8fafc; /* Soft White */
+  --text: #1e293b; /* Slate Text */
+
+  /* GLOBAL TYPOGRAPHY SETTINGS */
+  font-family: var(--sans);
+  font-size: 18px;
+  line-height: 1.5;
+
+  color-scheme: light;
+}
+
+/* ======================
+   BODY BASE STYLES
+====================== */
+
+body {
+  font-family: var(--sans);
+  background: var(--background);
+  color: var(--text);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* headings use serif globally */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--heading);
+  color: var(--primary);
+}
+
+/* buttons inherit clean base */
+button {
+  font-family: inherit;
+}
+
+/* inputs consistency */
+input {
+  font-family: inherit;
+}
+
+/* ======================
+   ROOT WRAPPER
+====================== */
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
