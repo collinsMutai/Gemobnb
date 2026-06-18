@@ -1,269 +1,220 @@
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaCalendarAlt } from "react-icons/fa";
+import { MdClose } from "react-icons/md";
+import { DateRange } from "react-date-range";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import "./Hero.css";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function Hero() {
-  const heroRef = useRef(null);
-  const slideRefs = useRef([]);
-
   const slides = [
     {
-      title: "Luxury Airbnb in Nairobi",
-      text: "A stylish and comfortable stay designed for business travelers, couples, and weekend getaways.",
+      title: "Luxury Stays in Nairobi",
+      text: "Modern, stylish, and fully serviced apartments in the heart of Westlands.",
       image:
-        "https://images.unsplash.com/photo-1511818966892-d7d671e672a2?auto=format&fit=crop&w=2000&q=80",
-      cta: "Book Your Stay",
+        "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/room-03-1024x683.jpg",
     },
     {
-      title: "Modern Comfort & Premium Amenities",
-      text: "Enjoy high-speed Wi-Fi, a fully equipped kitchen, smart TV, secure parking, and 24/7 security.",
+      title: "Comfort Meets Convenience",
+      text: "Enjoy fast WiFi, secure parking, and 24/7 guest support.",
       image:
-        "https://images.unsplash.com/photo-1667935837291-1dc178866251?auto=format&fit=crop&w=2000&q=80",
-      cta: "View Amenities",
+        "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/parallax-04.jpg",
     },
     {
-      title: "Experience Nairobi",
-      text: "Conveniently located near restaurants, shopping malls, nightlife, and major business districts.",
+      title: "Your Home in Nairobi",
+      text: "Perfect for business trips, long stays, or weekend getaways.",
       image:
-        "https://images.unsplash.com/photo-1526319238109-524eecb9b913?auto=format&fit=crop&w=2000&q=80",
-      cta: "Reserve Now",
+        "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/square-06.jpg",
     },
   ];
 
+  const [index, setIndex] = useState(0);
+  const [prevSlide, setPrevSlide] = useState(slides[0]);
+  const [currentSlide, setCurrentSlide] = useState(slides[0]);
+
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  const [range, setRange] = useState([
+    {
+      startDate: null,
+      endDate: null,
+      key: "selection",
+    },
+  ]);
+
+  const [months, setMonths] = useState(2);
+
   useEffect(() => {
-    let cleanupAutoplay = () => {};
-
-    const ctx = gsap.context(() => {
-      const slideEls = slideRefs.current;
-      const total = slideEls.length;
-
-      // Initial state: slide 1 active & visible, rest hidden
-      const kenBurnsTweens = [];
-
-      slideEls.forEach((slide, i) => {
-        const title = slide.querySelector(".hero-title");
-        const text = slide.querySelector(".hero-text");
-        const box = slide.querySelector(".search-box");
-        const cta = slide.querySelector(".hero-cta");
-        const bg = slide.querySelector(".hero-bg");
-
-        gsap.set(slide, { autoAlpha: i === 0 ? 1 : 0 });
-        gsap.set([title, text, box, cta], {
-          opacity: i === 0 ? 1 : 0,
-          y: i === 0 ? 0 : 60,
-        });
-
-        // continuous slow zoom on the background image
-        gsap.set(bg, { scale: 1.08 });
-        const kenBurns = gsap.to(bg, {
-          scale: 1.22,
-          duration: 8,
-          ease: "none",
-          paused: true,
-        });
-        kenBurnsTweens.push(kenBurns);
-
-        if (i === 0) {
-          slide.classList.add("active");
-          kenBurns.play();
-        }
-      });
-
-      let currentIndex = 0;
-      let userHasScrolled = false;
-
-      // One ScrollTrigger pins the whole hero and snaps between slide "steps"
-      const st = ScrollTrigger.create({
-        trigger: heroRef.current,
-        start: "top top",
-        // each extra slide beyond the first adds one viewport height of scroll
-        end: () => `+=${(total - 1) * window.innerHeight}`,
-        pin: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-        anticipatePin: 1,
-        snap: {
-          // snap to fractional steps between slides
-          snapTo: 1 / (total - 1),
-          duration: 0.5,
-          ease: "power1.inOut",
-        },
-        onUpdate: (self) => {
-          const progress = self.progress * (total - 1);
-          const index = Math.round(progress);
-          updateActiveSlide(index);
-        },
-      });
-
-      function updateActiveSlide(index) {
-        if (index === currentIndex) return;
-
-        const outgoing = slideEls[currentIndex];
-        const incoming = slideEls[index];
-
-        const outTitle = outgoing.querySelector(".hero-title");
-        const outText = outgoing.querySelector(".hero-text");
-        const outBox = outgoing.querySelector(".search-box");
-        const outCta = outgoing.querySelector(".hero-cta");
-        const outBg = outgoing.querySelector(".hero-bg");
-
-        const inTitle = incoming.querySelector(".hero-title");
-        const inText = incoming.querySelector(".hero-text");
-        const inBox = incoming.querySelector(".search-box");
-        const inCta = incoming.querySelector(".hero-cta");
-        const inBg = incoming.querySelector(".hero-bg");
-
-        outgoing.classList.remove("active");
-        incoming.classList.add("active");
-
-        // stop the outgoing image's zoom and reset it for next time
-        kenBurnsTweens[currentIndex].pause();
-        gsap.set(outBg, { scale: 1.08 });
-
-        // fade out current slide content
-        gsap.to([outTitle, outText, outBox, outCta].filter(Boolean), {
-          opacity: 0,
-          y: -40,
-          duration: 0.4,
-          ease: "power1.in",
-        });
-        gsap.to(outgoing, { autoAlpha: 0, duration: 0.5 });
-
-        // fade in next slide content
-        gsap.set(incoming, { autoAlpha: 1 });
-        gsap.fromTo(
-          [inTitle, inText, inBox, inCta].filter(Boolean),
-          { opacity: 0, y: 60 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            stagger: 0.12,
-            ease: "power3.out",
-            delay: 0.15,
-          },
-        );
-
-        // start the incoming image's zoom fresh
-        gsap.set(inBg, { scale: 1.08 });
-        kenBurnsTweens[index].restart();
-
-        currentIndex = index;
-      }
-
-      ScrollTrigger.refresh();
-
-      // ===== AUTOPLAY =====
-      // Advances slides on a timer, but only until the user actually
-      // scrolls — once they do, scroll takes over completely and
-      // autoplay stops for good (no fighting between the two).
-      const AUTOPLAY_DELAY = 8000; // ms, matches the Ken Burns duration
-      let autoplayTimer = null;
-
-      function scrollToIndex(index) {
-        // translate a slide index back into the scroll position
-        // ScrollTrigger expects, so onUpdate drives the transition
-        // exactly the same way manual scrolling does
-        const progress = index / (total - 1);
-        const scrollPos = st.start + progress * (st.end - st.start);
-        window.scrollTo({ top: scrollPos, behavior: "smooth" });
-        // smooth scroll has no reliable onComplete callback across
-        // browsers, so just schedule the next autoplay tick after
-        // a fixed delay roughly matching the scroll animation
-        setTimeout(scheduleAutoplay, 1000);
-      }
-
-      function scheduleAutoplay() {
-        if (userHasScrolled) return;
-        clearTimeout(autoplayTimer);
-        autoplayTimer = setTimeout(() => {
-          if (userHasScrolled) return;
-          const next = (currentIndex + 1) % total;
-          scrollToIndex(next);
-        }, AUTOPLAY_DELAY);
-      }
-
-      function stopAutoplay() {
-        if (userHasScrolled) return;
-        userHasScrolled = true;
-        clearTimeout(autoplayTimer);
-        window.removeEventListener("wheel", stopAutoplay);
-        window.removeEventListener("touchmove", stopAutoplay);
-        window.removeEventListener("keydown", handleKeydown);
-      }
-
-      function handleKeydown(e) {
-        const scrollKeys = ["ArrowDown", "ArrowUp", "PageDown", "PageUp", " "];
-        if (scrollKeys.includes(e.key)) stopAutoplay();
-      }
-
-      window.addEventListener("wheel", stopAutoplay, { passive: true });
-      window.addEventListener("touchmove", stopAutoplay, { passive: true });
-      window.addEventListener("keydown", handleKeydown);
-
-      scheduleAutoplay();
-
-      // expose for cleanup outside gsap.context (its callback's return
-      // value is not used as a cleanup function by gsap.context itself)
-      cleanupAutoplay = () => {
-        clearTimeout(autoplayTimer);
-        window.removeEventListener("wheel", stopAutoplay);
-        window.removeEventListener("touchmove", stopAutoplay);
-        window.removeEventListener("keydown", handleKeydown);
-      };
-    }, heroRef);
-
-    return () => {
-      cleanupAutoplay();
-      ctx.revert();
+    const handleResize = () => {
+      setMonths(window.innerWidth <= 768 ? 1 : 2);
     };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  /* =========================
+     SLIDESHOW (NO FLICKER FIX)
+  ========================= */
+  useEffect(() => {
+    if (openCalendar) return;
+
+    let timeout;
+
+    const preloadImage = (src) =>
+      new Promise((resolve) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = resolve;
+        img.onerror = resolve;
+      });
+
+    const run = async () => {
+      const nextIndex = (index + 1) % slides.length;
+
+      await preloadImage(slides[nextIndex].image);
+
+      setPrevSlide(currentSlide);
+      setCurrentSlide(slides[nextIndex]);
+      setIndex(nextIndex);
+
+      timeout = setTimeout(run, 7000);
+    };
+
+    timeout = setTimeout(run, 7000);
+
+    return () => clearTimeout(timeout);
+  }, [index, openCalendar, slides.length, currentSlide]);
+
+  const slide = currentSlide;
+
+  /* RESET DATES */
+  const clearDates = (e) => {
+    e.stopPropagation();
+
+    setRange([
+      {
+        startDate: null,
+        endDate: null,
+        key: "selection",
+      },
+    ]);
+  };
+
+  const hasSelection = range[0].startDate && range[0].endDate;
+
+  const renderDateText = () => {
+    const { startDate, endDate } = range[0];
+
+    if (!startDate) return "Select dates";
+
+    if (startDate && !endDate) {
+      return `${startDate.toLocaleDateString()} →`;
+    }
+
+    if (startDate && endDate && startDate.getTime() === endDate.getTime()) {
+      return `${startDate.toLocaleDateString()} →`;
+    }
+
+    return `${startDate.toLocaleDateString()} → ${endDate.toLocaleDateString()}`;
+  };
+
   return (
-    <section ref={heroRef} className="hero-container">
-      {slides.map((s, i) => (
-        <section
-          key={i}
-          ref={(el) => (slideRefs.current[i] = el)}
-          className={`hero-slide slide-${i + 1}`}
-        >
-          <div
-            className="hero-bg"
-            style={{ backgroundImage: `url(${s.image})` }}
-          />
+    <section className="hero-container">
+      {/* BACKGROUND (CROSSFADE LAYERED) */}
+      <div className="hero-bg-wrapper">
+        {/* previous slide */}
+        <motion.div
+          className="hero-bg"
+          style={{ backgroundImage: `url(${prevSlide.image})` }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+        />
 
-          <h1 className="hero-title">{s.title}</h1>
+        {/* current slide */}
+        <motion.div
+          key={currentSlide.image}
+          className="hero-bg"
+          style={{ backgroundImage: `url(${currentSlide.image})` }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        />
+      </div>
 
-          {s.text && <p className="hero-text">{s.text}</p>}
-
-          <motion.button
-            className="hero-cta"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+      {/* CONTENT */}
+      <div className="hero-content">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.title}
+            className="hero-inner"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.6 }}
           >
-            {s.cta}
-          </motion.button>
+            <h1 className="hero-title">{slide.title}</h1>
+            <p className="hero-text">{slide.text}</p>
 
-          <div className="search-box">
-            <input value="Nairobi" readOnly />
+            {/* DATE PICKER */}
+            <div className="search-box single-date">
+              <div
+                className="search-input"
+                onClick={() => setOpenCalendar((prev) => !prev)}
+              >
+                <FaCalendarAlt className="input-icon-left" />
 
-            <input type="date" aria-label="Check In" />
+                <div className="date-text">{renderDateText()}</div>
 
-            <input type="date" aria-label="Check Out" />
+                {hasSelection && (
+                  <button
+                    type="button"
+                    className="clear-dates-btn"
+                    onClick={clearDates}
+                  >
+                    <MdClose />
+                  </button>
+                )}
+              </div>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Check Availability
-            </motion.button>
-          </div>
-        </section>
-      ))}
+              <AnimatePresence>
+                {openCalendar && (
+                  <motion.div
+                    className="calendar-popup"
+                    onClick={(e) => e.stopPropagation()}
+                    initial={{ opacity: 0, y: 40, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 40, scale: 0.96 }}
+                  >
+                    <div className="calendar-mobile-header">
+                      <button onClick={() => setOpenCalendar(false)}>
+                        <MdClose size={22} />
+                      </button>
+
+                      <button onClick={clearDates}>Clear</button>
+                    </div>
+
+                    <DateRange
+                      ranges={range}
+                      onChange={(item) => setRange([item.selection])}
+                      moveRangeOnFirstSelection={false}
+                      editableDateInputs={true}
+                      rangeColors={["#ff5a5f"]}
+                      months={months}
+                      direction="horizontal"
+                      showMonthAndYearPickers={false}
+                      minDate={new Date()}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </section>
   );
 }

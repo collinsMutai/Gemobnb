@@ -1,64 +1,51 @@
 /* =========================
-   CONTAINER (PINNED, NO NATIVE SCROLL)
+   CONTAINER
 ========================= */
 
 .hero-container {
   height: 100vh;
   width: 100%;
   position: relative;
+
+  overflow-x: hidden;
+  overflow-y: visible;
+
+  background: #000; /* fallback so nothing ever shows white/blank */
 }
 
 /* =========================
-   SLIDES (STACKED, GSAP-CONTROLLED)
+   BACKGROUND WRAPPER (NEW FIX)
 ========================= */
 
-.hero-slide {
+.hero-bg-wrapper {
   position: absolute;
   inset: 0;
   overflow: hidden;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  text-align: center;
-  padding: 2rem;
-
-  /* GSAP sets opacity/visibility via autoAlpha; keep these as a safe default */
-  visibility: hidden;
-  opacity: 0;
-
-  pointer-events: none;
-
-  color: var(--background);
-}
-
-/* ACTIVE SLIDE: the one currently in view, content interactive */
-.hero-slide.active {
-  pointer-events: auto;
+  background: #000; /* prevents flash between images */
 }
 
 /* =========================
-   BACKGROUND IMAGE LAYER
-   (a dedicated element so GSAP can scale it independently
-   for the Ken Burns zoom without affecting text/layout)
+   BACKGROUND LAYER
 ========================= */
 
 .hero-bg {
   position: absolute;
   inset: 0;
-  z-index: 0;
 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 
-  will-change: transform;
-  transform-origin: center center;
+  transform: scale(1.05);
+  will-change: transform, opacity;
+
+  /* IMPORTANT: prevents flicker on some GPUs */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
-.hero-slide::before {
+/* dark overlay */
+.hero-container::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -66,190 +53,304 @@
   z-index: 1;
 }
 
-/* keep text/CTA/search-box above the bg image and dark overlay */
-.hero-slide > .hero-title,
-.hero-slide > .hero-text,
-.hero-slide > .hero-cta,
-.hero-slide > .search-box {
+/* =========================
+   CONTENT
+========================= */
+
+.hero-content {
   position: relative;
   z-index: 2;
+
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2rem;
+  text-align: center;
+  color: #fff;
+
+  overflow: visible;
+}
+
+.hero-inner {
+  max-width: 850px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  overflow: visible;
 }
 
 /* =========================
-   TYPOGRAPHY
+   TEXT
 ========================= */
 
 .hero-title {
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 800;
-  line-height: 1.05;
-  color: rgba(248, 250, 252, 0.95);
-}
-
-.hero-title span {
-  color: var(--secondary);
+  line-height: 1.1;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .hero-text {
-  max-width: 650px;
-  margin-top: 14px;
-
+  margin-top: 12px;
   font-size: 1rem;
   line-height: 1.6;
-  color: rgba(248, 250, 252, 0.85);
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 650px;
 }
 
 /* =========================
-   PER-SLIDE CTA BUTTON
+   DATE INPUT
 ========================= */
 
-.hero-cta {
+.search-box.single-date {
   margin-top: 2rem;
+  position: relative;
 
-  padding: 0.75rem 1.8rem;
-  border-radius: 50px;
-
-  background: var(--secondary);
-  color: var(--background);
-
-  border: none;
-  cursor: pointer;
-  font-size: 0.95rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
-}
-
-.hero-cta:hover {
-  background: var(--accent);
-  transform: translateY(-2px);
-}
-
-/* =========================
-   SEARCH BOX
-========================= */
-
-.search-box {
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-
   justify-content: center;
+
+  z-index: 1000;
+}
+
+.search-input {
+  position: relative;
+
+  display: flex;
   align-items: center;
+  gap: 0.8rem;
 
-  margin-top: 2rem;
-  padding: 1rem;
-
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.95rem 1.3rem;
   border-radius: 999px;
 
-  max-width: 100%;
-}
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
 
-.search-box input {
-  padding: 0.7rem 1rem;
-  border-radius: 40px;
-
-  border: none;
-  outline: none;
-
-  min-width: 140px;
-
-  font-family: 0.9rem;
-  color: var(--text);
-}
-
-.search-box button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-
-  background: var(--secondary);
-  color: var(--background);
-
-  border: none;
   cursor: pointer;
-  font-weight: 600;
 
-  transition:
-    transform 0.2s ease,
-    background 0.2s ease;
+  min-width: 340px;
+  max-width: 520px;
+
+  color: #fff;
+
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.search-box button:hover {
-  background: var(--accent);
-  transform: translateY(-2px);
+.search-input:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.25);
 }
+
+.input-icon-left {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+}
+
+.date-text {
+  flex: 1;
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  padding-right: 35px;
+}
+
+/* =========================
+   CLEAR ICON
+========================= */
+
+.clear-dates-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.clear-dates-btn:hover {
+  background: rgba(255, 90, 95, 0.25);
+  color: #ff5a5f;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* =========================
+   CALENDAR WRAPPER
+========================= */
+
+.calendar-popup {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+
+  z-index: 99999;
+
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+
+  width: 780px;
+  max-width: 95vw;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+
+  touch-action: manipulation;
+}
+
+.calendar-popup .rdrCalendarWrapper,
+.calendar-popup .rdrDateRangeWrapper {
+  width: 100% !important;
+  background: #fff;
+
+  touch-action: manipulation;
+  pointer-events: auto !important;
+}
+
+.calendar-popup .rdrMonths {
+  display: flex !important;
+  justify-content: center;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.calendar-popup .rdrMonthAndYearWrapper {
+  height: auto !important;
+}
+
+.rdrMonthAndYearPickers,
+.rdrDateDisplayWrapper {
+  display: none !important;
+}
+
+.calendar-popup .rdrDay {
+  background: transparent !important;
+}
+
+.calendar-popup .rdrDayNumber span {
+  color: #000 !important;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.calendar-popup .rdrDayPassive .rdrDayNumber span,
+.calendar-popup .rdrDayDisabled .rdrDayNumber span {
+  color: #b5b5b5 !important;
+}
+
+.calendar-popup .rdrDay:hover .rdrDayNumber span {
+  color: #ff5a5f !important;
+}
+
+.calendar-popup .rdrInRange {
+  background: rgba(255, 90, 95, 0.18) !important;
+}
+
+.calendar-popup .rdrStartEdge,
+.calendar-popup .rdrEndEdge {
+  background: rgba(255, 90, 95, 0.18) !important;
+}
+
+.calendar-popup .rdrStartEdge {
+  border-radius: 999px 0 0 999px;
+}
+
+.calendar-popup .rdrEndEdge {
+  border-radius: 0 999px 999px 0;
+}
+
+/* =========================
+   MOBILE (AIRBNB STYLE MODAL)
+========================= */
 
 @media (max-width: 768px) {
-  .hero-slide {
-    padding: 1.2rem;
+
+  .search-input {
+    min-width: 260px;
+    width: 100%;
   }
 
-  /* ===== TYPOGRAPHY ===== */
-  .hero-title {
-    font-size: 1.8rem;
-    line-height: 1.2;
-  }
+  .calendar-popup {
+    position: fixed;
+    inset: 0;
 
-  .hero-text {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    max-width: 100%;
-    margin-top: 10px;
-  }
+    width: 100%;
+    height: 100vh;
 
-  /* ===== CTA BUTTON ===== */
-  .hero-cta {
-    padding: 0.7rem 1.4rem;
-    font-size: 0.9rem;
-    margin-top: 1.2rem;
-  }
+    background: #fff;
+    border-radius: 0;
 
-  /* ===== SEARCH BOX ===== */
-  .search-box {
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    transform: none;
+
+    z-index: 999999;
+
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
 
-    gap: 0.6rem;
+    overflow-y: auto;
+  }
+
+  .calendar-mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
     padding: 1rem;
-    border-radius: 20px;
+    border-bottom: 1px solid #eee;
 
-    width: 100%;
-    max-width: 95%;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
   }
 
-  .search-box input {
-    width: 100%;
-    min-width: 0;
+  .calendar-mobile-header button {
+    border: none;
+    background: none;
 
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
+    color: #ff5a5f;
+    font-weight: 600;
+    font-size: 0.95rem;
   }
 
-  .search-box button {
-    width: 100%;
-    padding: 0.8rem 1rem;
-    font-size: 0.9rem;
+  .calendar-popup .rdrCalendarWrapper {
+    padding: 1rem;
+  }
+
+  .date-text {
+    font-size: 0.85rem;
   }
 }
 
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: 1.5rem;
-  }
+/* =========================
+   HIDE MOBILE HEADER ON DESKTOP
+========================= */
 
-  .hero-text {
-    font-size: 0.85rem;
-  }
-
-  .search-box {
-    padding: 0.8rem;
+@media (min-width: 769px) {
+  .calendar-mobile-header {
+    display: none;
   }
 }
