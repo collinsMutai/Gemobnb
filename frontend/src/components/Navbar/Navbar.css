@@ -66,12 +66,12 @@
 
 /* 🔽 REDUCED ICON SIZE */
 .icon {
-  font-size: 24px;   /* was 30px */
+  font-size: 24px; /* was 30px */
   color: var(--background);
   cursor: pointer;
   transition: transform 0.2s ease;
 
-  opacity: 0.9;      /* lighter visual weight */
+  opacity: 0.9; /* lighter visual weight */
   font-weight: 300;
 }
 
@@ -87,7 +87,6 @@
 
 /* ===== MOBILE ===== */
 @media (max-width: 768px) {
-
   .navbar {
     padding: 15px 20px;
   }
@@ -101,9 +100,9 @@
   }
 
   .icon {
-     width: 34px;
+    width: 34px;
     height: 34px;
-    font-size: 20px; 
+    font-size: 20px;
     opacity: 0.7;
   }
 
@@ -163,7 +162,7 @@
 
     border-radius: 0;
 
-    font-size: 12px; 
+    font-size: 12px;
     cursor: pointer;
 
     transition: all 0.25s ease;
@@ -179,7 +178,6 @@
 
 /* ===== EXTRA SMALL SCREENS ===== */
 @media (max-width: 480px) {
-
   .logo {
     font-size: 20px;
   }
