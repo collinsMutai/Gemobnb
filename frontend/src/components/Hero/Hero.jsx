@@ -57,7 +57,7 @@ export default function Hero() {
   }, []);
 
   /* =========================
-     SLIDESHOW (NO FLICKER FIX)
+     SLIDESHOW
   ========================= */
   useEffect(() => {
     if (openCalendar) return;
@@ -87,13 +87,12 @@ export default function Hero() {
     timeout = setTimeout(run, 7000);
 
     return () => clearTimeout(timeout);
-  }, [index, openCalendar, slides.length, currentSlide]);
+  }, [index, openCalendar, currentSlide]);
 
   const slide = currentSlide;
 
-  /* RESET DATES */
   const clearDates = (e) => {
-    e.stopPropagation();
+    e?.stopPropagation();
 
     setRange([
       {
@@ -104,7 +103,8 @@ export default function Hero() {
     ]);
   };
 
-  const hasSelection = range[0].startDate && range[0].endDate;
+  const hasSelection =
+    range[0].startDate && range[0].endDate;
 
   const renderDateText = () => {
     const { startDate, endDate } = range[0];
@@ -115,7 +115,11 @@ export default function Hero() {
       return `${startDate.toLocaleDateString()} →`;
     }
 
-    if (startDate && endDate && startDate.getTime() === endDate.getTime()) {
+    if (
+      startDate &&
+      endDate &&
+      startDate.getTime() === endDate.getTime()
+    ) {
       return `${startDate.toLocaleDateString()} →`;
     }
 
@@ -124,9 +128,8 @@ export default function Hero() {
 
   return (
     <section className="hero-container">
-      {/* BACKGROUND (CROSSFADE LAYERED) */}
+      {/* BACKGROUND */}
       <div className="hero-bg-wrapper">
-        {/* previous slide */}
         <motion.div
           className="hero-bg"
           style={{ backgroundImage: `url(${prevSlide.image})` }}
@@ -134,7 +137,6 @@ export default function Hero() {
           transition={{ duration: 1 }}
         />
 
-        {/* current slide */}
         <motion.div
           key={currentSlide.image}
           className="hero-bg"
@@ -159,15 +161,18 @@ export default function Hero() {
             <h1 className="hero-title">{slide.title}</h1>
             <p className="hero-text">{slide.text}</p>
 
-            {/* DATE PICKER */}
             <div className="search-box single-date">
               <div
                 className="search-input"
-                onClick={() => setOpenCalendar((prev) => !prev)}
+                onClick={() =>
+                  setOpenCalendar((prev) => !prev)
+                }
               >
                 <FaCalendarAlt className="input-icon-left" />
 
-                <div className="date-text">{renderDateText()}</div>
+                <div className="date-text">
+                  {renderDateText()}
+                </div>
 
                 {hasSelection && (
                   <button
@@ -182,33 +187,71 @@ export default function Hero() {
 
               <AnimatePresence>
                 {openCalendar && (
-                  <motion.div
-                    className="calendar-popup"
-                    onClick={(e) => e.stopPropagation()}
-                    initial={{ opacity: 0, y: 40, scale: 0.96 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 40, scale: 0.96 }}
-                  >
-                    <div className="calendar-mobile-header">
-                      <button onClick={() => setOpenCalendar(false)}>
-                        <MdClose size={22} />
-                      </button>
-
-                      <button onClick={clearDates}>Clear</button>
-                    </div>
-
-                    <DateRange
-                      ranges={range}
-                      onChange={(item) => setRange([item.selection])}
-                      moveRangeOnFirstSelection={false}
-                      editableDateInputs={true}
-                      rangeColors={["#ff5a5f"]}
-                      months={months}
-                      direction="horizontal"
-                      showMonthAndYearPickers={false}
-                      minDate={new Date()}
+                  <>
+                    {/* Click outside closes calendar */}
+                    <motion.div
+                      className="calendar-backdrop"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() =>
+                        setOpenCalendar(false)
+                      }
                     />
-                  </motion.div>
+
+                    <motion.div
+                      className="calendar-popup"
+                      onClick={(e) =>
+                        e.stopPropagation()
+                      }
+                      initial={{
+                        opacity: 0,
+                        y: 40,
+                        scale: 0.96,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                        scale: 1,
+                      }}
+                      exit={{
+                        opacity: 0,
+                        y: 40,
+                        scale: 0.96,
+                      }}
+                      transition={{
+                        duration: 0.25,
+                      }}
+                    >
+                      <div className="calendar-mobile-header">
+                        <button
+                          onClick={() =>
+                            setOpenCalendar(false)
+                          }
+                        >
+                          <MdClose size={22} />
+                        </button>
+
+                        <button onClick={clearDates}>
+                          Clear
+                        </button>
+                      </div>
+
+                      <DateRange
+                        ranges={range}
+                        onChange={(item) =>
+                          setRange([item.selection])
+                        }
+                        moveRangeOnFirstSelection={false}
+                        editableDateInputs={true}
+                        rangeColors={["#ff5a5f"]}
+                        months={months}
+                        direction="horizontal"
+                        showMonthAndYearPickers={false}
+                        minDate={new Date()}
+                      />
+                    </motion.div>
+                  </>
                 )}
               </AnimatePresence>
             </div>

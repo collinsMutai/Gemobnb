@@ -1,3 +1,5 @@
+
+
 /* =========================
    CONTAINER
 ========================= */
@@ -10,18 +12,18 @@
   overflow-x: hidden;
   overflow-y: visible;
 
-  background: #000; /* fallback so nothing ever shows white/blank */
+  background: #000;
 }
 
 /* =========================
-   BACKGROUND WRAPPER (NEW FIX)
+   BACKGROUND WRAPPER
 ========================= */
 
 .hero-bg-wrapper {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: #000; /* prevents flash between images */
+  background: #000;
 }
 
 /* =========================
@@ -37,9 +39,8 @@
   background-repeat: no-repeat;
 
   transform: scale(1.05);
-  will-change: transform, opacity;
+  will-change: opacity, transform;
 
-  /* IMPORTANT: prevents flicker on some GPUs */
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
@@ -69,8 +70,6 @@
   padding: 2rem;
   text-align: center;
   color: #fff;
-
-  overflow: visible;
 }
 
 .hero-inner {
@@ -78,8 +77,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  overflow: visible;
 }
 
 /* =========================
@@ -160,7 +157,7 @@
 }
 
 /* =========================
-   CLEAR ICON
+   CLEAR BUTTON
 ========================= */
 
 .clear-dates-btn {
@@ -194,7 +191,18 @@
 }
 
 /* =========================
-   CALENDAR WRAPPER
+   BACKDROP (NEW FIX)
+========================= */
+
+.calendar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  z-index: 99998;
+}
+
+/* =========================
+   CALENDAR POPUP
 ========================= */
 
 .calendar-popup {
@@ -222,44 +230,23 @@
 .calendar-popup .rdrDateRangeWrapper {
   width: 100% !important;
   background: #fff;
-
-  touch-action: manipulation;
-  pointer-events: auto !important;
 }
 
 .calendar-popup .rdrMonths {
   display: flex !important;
   justify-content: center;
-  margin: 0 !important;
-  padding: 0 !important;
 }
 
-.calendar-popup .rdrMonthAndYearWrapper {
-  height: auto !important;
-}
-
+/* hide unwanted UI */
 .rdrMonthAndYearPickers,
 .rdrDateDisplayWrapper {
   display: none !important;
-}
-
-.calendar-popup .rdrDay {
-  background: transparent !important;
 }
 
 .calendar-popup .rdrDayNumber span {
   color: #000 !important;
   font-size: 14px;
   font-weight: 500;
-}
-
-.calendar-popup .rdrDayPassive .rdrDayNumber span,
-.calendar-popup .rdrDayDisabled .rdrDayNumber span {
-  color: #b5b5b5 !important;
-}
-
-.calendar-popup .rdrDay:hover .rdrDayNumber span {
-  color: #ff5a5f !important;
 }
 
 .calendar-popup .rdrInRange {
@@ -271,20 +258,11 @@
   background: rgba(255, 90, 95, 0.18) !important;
 }
 
-.calendar-popup .rdrStartEdge {
-  border-radius: 999px 0 0 999px;
-}
-
-.calendar-popup .rdrEndEdge {
-  border-radius: 0 999px 999px 0;
-}
-
 /* =========================
-   MOBILE (AIRBNB STYLE MODAL)
+   MOBILE
 ========================= */
 
 @media (max-width: 768px) {
-
   .search-input {
     min-width: 260px;
     width: 100%;
@@ -297,15 +275,7 @@
     width: 100%;
     height: 100vh;
 
-    background: #fff;
     border-radius: 0;
-
-    margin: 0 auto;
-    left: 0;
-    right: 0;
-    transform: none;
-
-    z-index: 999999;
 
     display: flex;
     flex-direction: column;
@@ -330,10 +300,8 @@
   .calendar-mobile-header button {
     border: none;
     background: none;
-
     color: #ff5a5f;
     font-weight: 600;
-    font-size: 0.95rem;
   }
 
   .calendar-popup .rdrCalendarWrapper {
