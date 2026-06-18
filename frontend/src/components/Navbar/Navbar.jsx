@@ -29,6 +29,7 @@ export default function Navbar() {
 
         <Link className="nav-link" onClick={closeMenu} to="/">Home</Link>
         <Link className="nav-link" onClick={closeMenu} to="/about">About</Link>
+        <Link className="nav-link" onClick={closeMenu} to="/gallery">Gallery</Link>
         <Link className="nav-link" onClick={closeMenu} to="/contact">Contact</Link>
         <Link className="nav-link" onClick={closeMenu} to="/become-host">Become Host</Link>
       </div>

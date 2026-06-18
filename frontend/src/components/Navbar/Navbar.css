@@ -8,7 +8,7 @@
   justify-content: space-between;
   align-items: center;
 
-  background: rgba(15, 23, 42, 0.35); /* var(--primary) based */
+  background: rgba(15, 23, 42, 0.35);
   backdrop-filter: blur(15px);
   z-index: 1000;
 
@@ -18,7 +18,7 @@
 .logo {
   font-size: 28px;
   font-weight: 700;
-  color: var(--background); /* light text on dark glass */
+  color: var(--background);
 }
 
 /* ===== LINKS (DESKTOP) ===== */
@@ -27,7 +27,6 @@
   gap: 30px;
 }
 
-/* Link styling */
 .nav-link {
   color: var(--background);
   text-decoration: none;
@@ -38,7 +37,6 @@
   transition: color 0.3s ease;
 }
 
-/* underline animation */
 .nav-link::after {
   content: "";
   position: absolute;
@@ -66,17 +64,23 @@
   z-index: 1100;
 }
 
+/* 🔽 REDUCED ICON SIZE */
 .icon {
-  font-size: 30px;
+  font-size: 24px;   /* was 30px */
   color: var(--background);
   cursor: pointer;
   transition: transform 0.2s ease;
+
+  opacity: 0.9;      /* lighter visual weight */
+  font-weight: 300;
 }
 
 .icon:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
+  opacity: 1;
 }
 
+/* CLOSE BUTTON DEFAULT (desktop hidden) */
 .close-btn {
   display: none;
 }
@@ -90,7 +94,6 @@
 
   .logo {
     font-size: 22px;
-    color: var(--background);
   }
 
   .menu-btn {
@@ -98,10 +101,13 @@
   }
 
   .icon {
-    font-size: 28px;
+     width: 34px;
+    height: 34px;
+    font-size: 20px; 
+    opacity: 0.7;
   }
 
-  /* Mobile drawer */
+  /* ===== DRAWER ===== */
   .nav-links {
     position: fixed;
     top: 0;
@@ -110,7 +116,7 @@
     height: 100vh;
     width: 75%;
 
-    background: rgba(15, 23, 42, 0.95); /* var(--primary) */
+    background: rgba(15, 23, 42, 0.95);
     backdrop-filter: blur(12px);
 
     display: flex;
@@ -139,21 +145,35 @@
     color: var(--secondary);
   }
 
+  /* ===== CLOSE BUTTON ===== */
   .close-btn {
-    display: block;
-    position: absolute;
-    top: 20px;
-    left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    font-size: 28px;
-    color: var(--background);
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 34px;
+    height: 34px;
+
+    background: var(--secondary);
+    color: var(--primary);
+
+    border-radius: 0;
+
+    font-size: 12px; 
     cursor: pointer;
 
-    transition: transform 0.2s ease;
+    transition: all 0.25s ease;
+    opacity: 0.95;
   }
 
   .close-btn:hover {
-    transform: rotate(90deg) scale(1.1);
+    transform: scale(1.05);
+    background: var(--accent);
+    opacity: 1;
   }
 }
 
@@ -174,6 +194,6 @@
   }
 
   .icon {
-    font-size: 26px;
+    font-size: 20px; /* extra reduced */
   }
 }
