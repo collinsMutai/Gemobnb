@@ -1,5 +1,7 @@
 import  { useState } from "react";
 import "./Gallery.css";
+import Neighborhood from "../Neighborhood/Neighborhood";
+import Experience from "../Experience/Experience";
 
 const images = [
   "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85", // luxury apartment
@@ -16,6 +18,7 @@ export default function Gallery() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
+   <>
     <section className="gallery">
       {/* HERO IMAGE */}
       <div className="gallery__hero">
@@ -40,5 +43,8 @@ export default function Gallery() {
         ))}
       </div>
     </section>
+   <Neighborhood />
+   <Experience />
+   </>
   );
 }
