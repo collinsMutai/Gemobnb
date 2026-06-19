@@ -29,13 +29,15 @@ export default function Navbar() {
 
       {/* Drawer */}
       <div className={`nav-links ${open ? "active" : ""}`}>
-        <IoClose className="close-btn" onClick={closeMenu} />
-
+        {open && <IoClose className="close-btn" onClick={closeMenu} />}
         <button className="nav-link" onClick={() => scrollToSection("home")}>
           Home
         </button>
 
-        <button className="nav-link" onClick={() => scrollToSection("highlights")}>
+        <button
+          className="nav-link"
+          onClick={() => scrollToSection("highlights")}
+        >
           Highlights
         </button>
 
@@ -47,15 +49,24 @@ export default function Navbar() {
           About
         </button>
 
-        <button className="nav-link" onClick={() => scrollToSection("amenities")}>
+        <button
+          className="nav-link"
+          onClick={() => scrollToSection("amenities")}
+        >
           Amenities
         </button>
 
-        <button className="nav-link" onClick={() => scrollToSection("experience")}>
+        <button
+          className="nav-link"
+          onClick={() => scrollToSection("experience")}
+        >
           Experience
         </button>
 
-        <button className="nav-link" onClick={() => scrollToSection("neighborhood")}>
+        <button
+          className="nav-link"
+          onClick={() => scrollToSection("neighborhood")}
+        >
           Neighborhood
         </button>
 
