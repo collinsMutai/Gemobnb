@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaCalendarAlt } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
-import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
+import { createPortal } from "react-dom";
+
+import CalendarModal from "../CalendarModal/CalendarModal";
 import "./Hero.css";
 
 export default function Hero() {
@@ -43,19 +43,6 @@ export default function Hero() {
     },
   ]);
 
-  const [months, setMonths] = useState(2);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setMonths(window.innerWidth <= 768 ? 1 : 2);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   /* =========================
      SLIDESHOW
   ========================= */
@@ -87,9 +74,7 @@ export default function Hero() {
     timeout = setTimeout(run, 7000);
 
     return () => clearTimeout(timeout);
-  }, [index, openCalendar, currentSlide]);
-
-  const slide = currentSlide;
+  }, [index, currentSlide, openCalendar]);
 
   const clearDates = (e) => {
     e?.stopPropagation();
@@ -103,8 +88,7 @@ export default function Hero() {
     ]);
   };
 
-  const hasSelection =
-    range[0].startDate && range[0].endDate;
+  const hasSelection = range[0].startDate && range[0].endDate;
 
   const renderDateText = () => {
     const { startDate, endDate } = range[0];
@@ -115,16 +99,10 @@ export default function Hero() {
       return `${startDate.toLocaleDateString()} →`;
     }
 
-    if (
-      startDate &&
-      endDate &&
-      startDate.getTime() === endDate.getTime()
-    ) {
-      return `${startDate.toLocaleDateString()} →`;
-    }
-
     return `${startDate.toLocaleDateString()} → ${endDate.toLocaleDateString()}`;
   };
+
+  const slide = currentSlide;
 
   return (
     <section className="hero-container">
@@ -164,15 +142,11 @@ export default function Hero() {
             <div className="search-box single-date">
               <div
                 className="search-input"
-                onClick={() =>
-                  setOpenCalendar((prev) => !prev)
-                }
+                onClick={() => setOpenCalendar(true)}
               >
                 <FaCalendarAlt className="input-icon-left" />
 
-                <div className="date-text">
-                  {renderDateText()}
-                </div>
+                <div className="date-text">{renderDateText()}</div>
 
                 {hasSelection && (
                   <button
@@ -184,80 +158,23 @@ export default function Hero() {
                   </button>
                 )}
               </div>
-
-              <AnimatePresence>
-                {openCalendar && (
-                  <>
-                    {/* Click outside closes calendar */}
-                    <motion.div
-                      className="calendar-backdrop"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      onClick={() =>
-                        setOpenCalendar(false)
-                      }
-                    />
-
-                    <motion.div
-                      className="calendar-popup"
-                      onClick={(e) =>
-                        e.stopPropagation()
-                      }
-                      initial={{
-                        opacity: 0,
-                        y: 40,
-                        scale: 0.96,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                      }}
-                      exit={{
-                        opacity: 0,
-                        y: 40,
-                        scale: 0.96,
-                      }}
-                      transition={{
-                        duration: 0.25,
-                      }}
-                    >
-                      <div className="calendar-mobile-header">
-                        <button
-                          onClick={() =>
-                            setOpenCalendar(false)
-                          }
-                        >
-                          <MdClose size={22} />
-                        </button>
-
-                        <button onClick={clearDates}>
-                          Clear
-                        </button>
-                      </div>
-
-                      <DateRange
-                        ranges={range}
-                        onChange={(item) =>
-                          setRange([item.selection])
-                        }
-                        moveRangeOnFirstSelection={false}
-                        editableDateInputs={true}
-                        rangeColors={["#ff5a5f"]}
-                        months={months}
-                        direction="horizontal"
-                        showMonthAndYearPickers={false}
-                        minDate={new Date()}
-                      />
-                    </motion.div>
-                  </>
-                )}
-              </AnimatePresence>
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {/* ✅ PORTAL MODAL (FIXED) */}
+      {openCalendar &&
+        createPortal(
+          <CalendarModal
+            open={openCalendar}
+            setOpen={setOpenCalendar}
+            range={range}
+            setRange={setRange}
+            clearDates={clearDates}
+          />,
+          document.body
+        )}
     </section>
   );
 }

@@ -201,62 +201,7 @@
   z-index: 99998;
 }
 
-/* =========================
-   CALENDAR POPUP
-========================= */
 
-.calendar-popup {
-  position: absolute;
-  top: calc(100% + 12px);
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-
-  z-index: 99999;
-
-  background: #fff;
-  border-radius: 18px;
-  overflow: hidden;
-
-  width: 780px;
-  max-width: 95vw;
-
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-
-  touch-action: manipulation;
-}
-
-.calendar-popup .rdrCalendarWrapper,
-.calendar-popup .rdrDateRangeWrapper {
-  width: 100% !important;
-  background: #fff;
-}
-
-.calendar-popup .rdrMonths {
-  display: flex !important;
-  justify-content: center;
-}
-
-/* hide unwanted UI */
-.rdrMonthAndYearPickers,
-.rdrDateDisplayWrapper {
-  display: none !important;
-}
-
-.calendar-popup .rdrDayNumber span {
-  color: #000 !important;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.calendar-popup .rdrInRange {
-  background: rgba(255, 90, 95, 0.18) !important;
-}
-
-.calendar-popup .rdrStartEdge,
-.calendar-popup .rdrEndEdge {
-  background: rgba(255, 90, 95, 0.18) !important;
-}
 
 /* =========================
    MOBILE
@@ -268,57 +213,9 @@
     width: 100%;
   }
 
-  .calendar-popup {
-    position: fixed;
-    inset: 0;
-
-    width: 100%;
-    height: 100vh;
-
-    border-radius: 0;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow-y: auto;
-  }
-
-  .calendar-mobile-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-
-    position: sticky;
-    top: 0;
-    background: #fff;
-    z-index: 10;
-  }
-
-  .calendar-mobile-header button {
-    border: none;
-    background: none;
-    color: #ff5a5f;
-    font-weight: 600;
-  }
-
-  .calendar-popup .rdrCalendarWrapper {
-    padding: 1rem;
-  }
 
   .date-text {
     font-size: 0.85rem;
   }
 }
 
-/* =========================
-   HIDE MOBILE HEADER ON DESKTOP
-========================= */
-
-@media (min-width: 769px) {
-  .calendar-mobile-header {
-    display: none;
-  }
-}
