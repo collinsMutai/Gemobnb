@@ -4,14 +4,14 @@ const experiences = [
   {
     title: "Golden Nairobi Sunsets",
     image:
-      "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+      "https://miro.medium.com/v2/resize:fit:1020/1*DJUma2x0HYJIJv-NxiM3iA.jpeg",
     description:
       "Unwind with breathtaking sunset views from your balcony overlooking the Kiambu Road skyline.",
   },
   {
     title: "Morning Coffee Moments",
     image:
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1200&q=80",
+      "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/blog-01-1024x683.jpg",
     description:
       "Start your day with freshly brewed coffee and a peaceful breakfast before exploring Nairobi.",
   },
@@ -25,7 +25,7 @@ const experiences = [
   {
     title: "Feel at Home",
     image:
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
+      "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/parallax-04.jpg",
     description:
       "Thoughtfully designed spaces that balance comfort, productivity, and modern living.",
   },

@@ -1,0 +1,193 @@
+/* ======================
+   SECTION
+====================== */
+
+.about {
+  width: min(1200px, 92%);
+  margin: 6rem auto;
+
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+/* ======================
+   CONTENT
+====================== */
+
+.about-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.section-tag {
+  display: inline-block;
+  width: fit-content;
+
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+
+  border-radius: 999px;
+
+  background: rgba(20, 184, 166, 0.12);
+  color: var(--secondary);
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.about-content h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+
+  color: var(--primary);
+}
+
+.about-intro {
+  margin-bottom: 1rem;
+}
+
+.about-content p {
+  color: var(--text);
+  line-height: 1.8;
+}
+
+/* ======================
+   FEATURES
+====================== */
+
+.about-features {
+  margin-top: 2rem;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  background: white;
+  padding: 1rem;
+
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-4px);
+
+  border-color: var(--secondary);
+
+  box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+}
+
+.feature-item svg {
+  color: var(--secondary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.feature-item span {
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* ======================
+   IMAGE
+====================== */
+
+.about-image {
+  position: relative;
+}
+
+.about-image img {
+  width: 100%;
+  height: 600px;
+
+  object-fit: cover;
+
+  border-radius: 24px;
+
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+
+  display: block;
+}
+
+/* ======================
+   TABLET
+====================== */
+
+@media (max-width: 1000px) {
+  .about {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .about-image {
+    order: -1;
+  }
+
+  .about-image img {
+    height: 450px;
+  }
+}
+
+/* ======================
+   MOBILE
+====================== */
+
+@media (max-width: 640px) {
+  .about {
+    margin: 4rem auto;
+    gap: 2rem;
+  }
+
+  .about-content h2 {
+    font-size: 2rem;
+  }
+
+  .about-features {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-item {
+    padding: 0.9rem;
+  }
+
+  .about-image img {
+    height: 320px;
+    border-radius: 20px;
+  }
+}
+
+/* ======================
+   SMALL PHONES
+====================== */
+
+@media (max-width: 420px) {
+  .about-content h2 {
+    font-size: 1.75rem;
+  }
+
+  .section-tag {
+    font-size: 0.85rem;
+  }
+
+  .about-content p,
+  .feature-item span {
+    font-size: 0.9rem;
+  }
+}

@@ -13,6 +13,11 @@ body {
   width: 100%;
 }
 
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px; /* adjust based on navbar height */
+}
 /* ======================
    ROOT THEME + DESIGN TOKENS
 ====================== */
@@ -81,6 +86,11 @@ input {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-   padding-top: 90px; 
+  padding-top: 80px;
 }
 
+@media (max-width: 768px) {
+  #root {
+    padding-top: 70px;
+  }
+}

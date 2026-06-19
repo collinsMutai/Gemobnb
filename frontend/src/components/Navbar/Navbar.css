@@ -1,3 +1,7 @@
+/* ======================
+   NAVBAR
+====================== */
+
 .navbar {
   position: fixed;
   top: 0;
@@ -21,29 +25,41 @@
   color: var(--background);
 }
 
-/* ===== LINKS (DESKTOP) ===== */
+/* ======================
+   LINKS (DESKTOP)
+====================== */
+
 .nav-links {
   display: flex;
   gap: 30px;
 }
 
+/* works for button links (no default button styles) */
 .nav-link {
+  all: unset;
+  cursor: pointer;
+
   color: var(--background);
-  text-decoration: none;
   font-size: 16px;
   font-weight: 500;
+
   position: relative;
   padding: 6px 0;
+
   transition: color 0.3s ease;
+  display: inline-block;
 }
 
+/* underline animation */
 .nav-link::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: -4px;
+
   width: 0%;
   height: 2px;
+
   background: var(--secondary);
   transition: width 0.3s ease;
 }
@@ -56,7 +72,10 @@
   color: var(--secondary);
 }
 
-/* ===== HAMBURGER ===== */
+/* ======================
+   HAMBURGER
+====================== */
+
 .menu-btn {
   display: none;
   cursor: pointer;
@@ -64,14 +83,13 @@
   z-index: 1100;
 }
 
-/* 🔽 REDUCED ICON SIZE */
 .icon {
-  font-size: 24px; /* was 30px */
+  font-size: 24px;
   color: var(--background);
   cursor: pointer;
   transition: transform 0.2s ease;
 
-  opacity: 0.9; /* lighter visual weight */
+  opacity: 0.9;
   font-weight: 300;
 }
 
@@ -80,12 +98,18 @@
   opacity: 1;
 }
 
-/* CLOSE BUTTON DEFAULT (desktop hidden) */
+/* ======================
+   CLOSE BUTTON (DESKTOP HIDDEN)
+====================== */
+
 .close-btn {
   display: none;
 }
 
-/* ===== MOBILE ===== */
+/* ======================
+   MOBILE
+====================== */
+
 @media (max-width: 768px) {
   .navbar {
     padding: 15px 20px;
@@ -106,7 +130,7 @@
     opacity: 0.7;
   }
 
-  /* ===== DRAWER ===== */
+  /* drawer */
   .nav-links {
     position: fixed;
     top: 0;
@@ -135,16 +159,21 @@
   }
 
   .nav-link {
+    all: unset;
+    cursor: pointer;
+
     font-size: 20px;
     width: fit-content;
+
     color: var(--background);
+    font-weight: 500;
   }
 
   .nav-link:hover {
     color: var(--secondary);
   }
 
-  /* ===== CLOSE BUTTON ===== */
+  /* close button */
   .close-btn {
     display: flex;
     align-items: center;
@@ -160,8 +189,6 @@
     background: var(--secondary);
     color: var(--primary);
 
-    border-radius: 0;
-
     font-size: 12px;
     cursor: pointer;
 
@@ -176,14 +203,13 @@
   }
 }
 
-/* ===== EXTRA SMALL SCREENS ===== */
+/* ======================
+   EXTRA SMALL SCREENS
+====================== */
+
 @media (max-width: 480px) {
   .logo {
     font-size: 20px;
-  }
-
-  .nav-link {
-    font-size: 18px;
   }
 
   .nav-links {
@@ -192,6 +218,10 @@
   }
 
   .icon {
-    font-size: 20px; /* extra reduced */
+    font-size: 20px;
+  }
+
+  .nav-link {
+    font-size: 18px;
   }
 }
