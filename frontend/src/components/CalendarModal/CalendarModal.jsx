@@ -10,6 +10,7 @@ export default function CalendarModal({
   range,
   setRange,
   clearDates,
+  onConfirm,
 }) {
   const startDate = range[0].startDate;
   const endDate = range[0].endDate;
@@ -37,11 +38,16 @@ export default function CalendarModal({
             <h3>Select Your Stay Dates</h3>
 
             <div className="calendar-actions">
-              <button className="clear-btn" onClick={clearDates}>
+              <button
+                type="button"
+                className="clear-btn"
+                onClick={clearDates}
+              >
                 Clear
               </button>
 
               <button
+                type="button"
                 className="close-btn"
                 onClick={() => setOpen(false)}
               >
@@ -56,15 +62,19 @@ export default function CalendarModal({
             onChange={(dates) => {
               const [start, end] = dates ?? [null, null];
 
-              setRange([
-                {
-                  startDate: start,
-                  endDate: end,
-                  key: "selection",
-                },
-              ]);
+              const selection = {
+                startDate: start,
+                endDate: end,
+                key: "selection",
+              };
 
-              if (start && end) setOpen(false);
+              setRange([selection]);
+
+              // When both dates are selected,
+              // open confirmation modal
+              if (start && end) {
+                onConfirm?.(selection);
+              }
             }}
             startDate={startDate}
             endDate={endDate}

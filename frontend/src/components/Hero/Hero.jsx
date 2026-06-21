@@ -5,6 +5,8 @@ import { MdClose } from "react-icons/md";
 import { createPortal } from "react-dom";
 
 import CalendarModal from "../CalendarModal/CalendarModal";
+import DateConfirmationModal from "../DateConfirmationModal/DateConfirmationModal";
+
 import "./Hero.css";
 
 export default function Hero() {
@@ -34,6 +36,9 @@ export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(slides[0]);
 
   const [openCalendar, setOpenCalendar] = useState(false);
+  const [openConfirmation, setOpenConfirmation] = useState(false);
+
+  const [selectedRange, setSelectedRange] = useState(null);
 
   const [range, setRange] = useState([
     {
@@ -47,7 +52,7 @@ export default function Hero() {
      SLIDESHOW
   ========================= */
   useEffect(() => {
-    if (openCalendar) return;
+    if (openCalendar || openConfirmation) return;
 
     let timeout;
 
@@ -74,21 +79,22 @@ export default function Hero() {
     timeout = setTimeout(run, 7000);
 
     return () => clearTimeout(timeout);
-  }, [index, currentSlide, openCalendar]);
+  }, [index, currentSlide, openCalendar, openConfirmation]);
 
   const clearDates = (e) => {
     e?.stopPropagation();
 
-    setRange([
-      {
-        startDate: null,
-        endDate: null,
-        key: "selection",
-      },
-    ]);
+    const resetRange = {
+      startDate: null,
+      endDate: null,
+      key: "selection",
+    };
+
+    setRange([resetRange]);
+    setSelectedRange(null);
   };
 
-  const hasSelection = range[0].startDate && range[0].endDate;
+  const hasSelection = range[0]?.startDate && range[0]?.endDate;
 
   const renderDateText = () => {
     const { startDate, endDate } = range[0];
@@ -163,7 +169,7 @@ export default function Hero() {
         </AnimatePresence>
       </div>
 
-      {/* ✅ PORTAL MODAL (FIXED) */}
+      {/* Calendar Modal */}
       {openCalendar &&
         createPortal(
           <CalendarModal
@@ -172,8 +178,30 @@ export default function Hero() {
             range={range}
             setRange={setRange}
             clearDates={clearDates}
+            onConfirm={(selection) => {
+              setSelectedRange(selection);
+              setOpenCalendar(false);
+              setOpenConfirmation(true);
+            }}
           />,
-          document.body
+          document.body,
+        )}
+
+      {/* Confirmation Modal */}
+      {openConfirmation &&
+        selectedRange &&
+        createPortal(
+          <DateConfirmationModal
+            open={openConfirmation}
+            setOpen={setOpenConfirmation}
+            range={selectedRange}
+            onContinue={() => {
+              console.log("Proceed to booking");
+
+              // navigate("/booking");
+            }}
+          />,
+          document.body,
         )}
     </section>
   );

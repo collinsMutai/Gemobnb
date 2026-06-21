@@ -34,7 +34,6 @@
   gap: 30px;
 }
 
-/* works for button links (no default button styles) */
 .nav-link {
   all: unset;
   cursor: pointer;
@@ -50,7 +49,6 @@
   display: inline-block;
 }
 
-/* underline animation */
 .nav-link::after {
   content: "";
   position: absolute;
@@ -88,9 +86,7 @@
   color: var(--background);
   cursor: pointer;
   transition: transform 0.2s ease;
-
   opacity: 0.9;
-  font-weight: 300;
 }
 
 .icon:hover {
@@ -99,7 +95,7 @@
 }
 
 /* ======================
-   CLOSE BUTTON (DESKTOP HIDDEN)
+   CLOSE BUTTON
 ====================== */
 
 .close-btn {
@@ -111,6 +107,7 @@
 ====================== */
 
 @media (max-width: 768px) {
+
   .navbar {
     padding: 15px 20px;
   }
@@ -127,10 +124,13 @@
     width: 34px;
     height: 34px;
     font-size: 20px;
-    opacity: 0.7;
+    opacity: 0.8;
   }
 
-  /* drawer */
+  /* ======================
+     DRAWER (CENTERED + TIGHT SPACING)
+  ====================== */
+
   .nav-links {
     position: fixed;
     top: 0;
@@ -145,8 +145,14 @@
     display: flex;
     flex-direction: column;
 
-    padding: 90px 25px;
-    gap: 22px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    /* 🔥 REDUCED SPACING */
+    gap: 14px;
+
+    padding: 70px 20px;
 
     transform: translateX(100%);
     transition: transform 0.4s ease-in-out;
@@ -162,44 +168,53 @@
     all: unset;
     cursor: pointer;
 
-    font-size: 20px;
-    width: fit-content;
+    font-size: 19px;
+    font-weight: 500;
 
     color: var(--background);
-    font-weight: 500;
+
+    text-align: center;
+
+    /* tighter clickable area */
+    padding: 6px 0;
+
+    transition: color 0.3s ease;
   }
 
   .nav-link:hover {
     color: var(--secondary);
   }
 
-  /* close button */
+  /* ======================
+     CLOSE BUTTON
+  ====================== */
+
   .close-btn {
     display: flex;
     align-items: center;
     justify-content: center;
 
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 18px;
+    right: 18px;
 
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
+
+    border-radius: 10px;
 
     background: var(--secondary);
     color: var(--primary);
 
-    font-size: 12px;
+    font-size: 14px;
     cursor: pointer;
 
     transition: all 0.25s ease;
-    opacity: 0.95;
   }
 
   .close-btn:hover {
     transform: scale(1.05);
     background: var(--accent);
-    opacity: 1;
   }
 }
 
@@ -208,20 +223,25 @@
 ====================== */
 
 @media (max-width: 480px) {
+
   .logo {
     font-size: 20px;
   }
 
   .nav-links {
     width: 85%;
-    padding: 80px 20px;
-  }
 
-  .icon {
-    font-size: 20px;
+    /* even tighter for small phones */
+    gap: 10px;
+
+    padding: 65px 15px;
   }
 
   .nav-link {
     font-size: 18px;
+  }
+
+  .icon {
+    font-size: 20px;
   }
 }

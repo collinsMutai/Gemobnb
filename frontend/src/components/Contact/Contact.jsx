@@ -9,12 +9,26 @@ import {
 
 import { HiOutlinePaperAirplane } from "react-icons/hi";
 
+import CalendarModal from "../CalendarModal/CalendarModal"; 
+
 export default function Contact() {
   const [form, setForm] = useState({
     name: "",
     email: "",
     message: "",
   });
+
+  // ✅ MODAL STATE
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  // ✅ DATE RANGE STATE
+  const [range, setRange] = useState([
+    {
+      startDate: null,
+      endDate: null,
+      key: "selection",
+    },
+  ]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -26,11 +40,22 @@ export default function Contact() {
     setForm({ name: "", email: "", message: "" });
   };
 
+  // ✅ CLEAR DATES
+  const clearDates = () => {
+    setRange([
+      {
+        startDate: null,
+        endDate: null,
+        key: "selection",
+      },
+    ]);
+  };
+
   return (
     <section className="contact-section" id="contact">
       <div className="contact-card">
 
-        {/* LEFT: CTA */}
+        {/* LEFT */}
         <div className="contact-left">
           <h2>Ready to Experience Nairobi in Comfort?</h2>
 
@@ -39,7 +64,11 @@ export default function Contact() {
             modern, secure, and peaceful living close to Nairobi.
           </p>
 
-          <button className="contact-cta-btn">
+          {/* ✅ OPEN MODAL BUTTON */}
+          <button
+            className="contact-cta-btn"
+            onClick={() => setOpenCalendar(true)}
+          >
             Reserve Your Dates
           </button>
 
@@ -52,18 +81,18 @@ export default function Contact() {
 
             <p>
               <FaPhoneAlt className="icon" />
-              <span>+254 Fast Response Support</span>
+              <span>+1 (502) 600-3401</span>
             </p>
 
             <p>
               <FaEnvelope className="icon" />
-              <span>gemoBnB@gmail.com</span>
+              <span>info@gemobnb.com</span>
             </p>
 
           </div>
         </div>
 
-        {/* RIGHT: FORM */}
+        {/* RIGHT */}
         <div className="contact-right">
           <h3>Send a Message</h3>
 
@@ -105,6 +134,16 @@ export default function Contact() {
         </div>
 
       </div>
+
+      {/* ✅ CALENDAR MODAL */}
+      {openCalendar && (
+        <CalendarModal
+          setOpen={setOpenCalendar}
+          range={range}
+          setRange={setRange}
+          clearDates={clearDates}
+        />
+      )}
     </section>
   );
 }

@@ -50,7 +50,7 @@ export default function AppRoutes() {
           <GuestReviews />
         </section>
 
-        <section id="faw">
+        <section id="faq">
           <FAQ />
         </section>
 

@@ -1,7 +1,7 @@
 .footer {
   background: linear-gradient(180deg, #0f172a, #020617);
   color: #ffffff;
-  margin-top: 5rem;
+  margin-top: rem;
   padding-top: 4rem;
   position: relative;
   overflow: hidden;
@@ -73,6 +73,20 @@
 .footer-column a:hover {
   color: #14b8a6;
   transform: translateX(4px);
+}
+
+.footer-book-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.footer-book-btn:hover {
+  text-decoration: underline;
 }
 
 /* ======================
