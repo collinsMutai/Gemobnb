@@ -6,6 +6,7 @@ import { createPortal } from "react-dom";
 
 import CalendarModal from "../CalendarModal/CalendarModal";
 import DateConfirmationModal from "../DateConfirmationModal/DateConfirmationModal";
+import ContactInfoModal from "../ContactInfoModal/ContactInfoModal";
 
 import "./Hero.css";
 
@@ -37,6 +38,7 @@ export default function Hero() {
 
   const [openCalendar, setOpenCalendar] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
+  const [openContact, setOpenContact] = useState(false); // ✅ NEW
 
   const [selectedRange, setSelectedRange] = useState(null);
 
@@ -52,7 +54,7 @@ export default function Hero() {
      SLIDESHOW
   ========================= */
   useEffect(() => {
-    if (openCalendar || openConfirmation) return;
+    if (openCalendar || openConfirmation || openContact) return;
 
     let timeout;
 
@@ -79,7 +81,7 @@ export default function Hero() {
     timeout = setTimeout(run, 7000);
 
     return () => clearTimeout(timeout);
-  }, [index, currentSlide, openCalendar, openConfirmation]);
+  }, [index, currentSlide, openCalendar, openConfirmation, openContact]);
 
   const clearDates = (e) => {
     e?.stopPropagation();
@@ -196,9 +198,50 @@ export default function Hero() {
             setOpen={setOpenConfirmation}
             range={selectedRange}
             onContinue={() => {
-              console.log("Proceed to booking");
+              setOpenConfirmation(false); // ✅ close current
+              setOpenContact(true); // ✅ open next
+            }}
+          />,
+          document.body,
+        )}
 
-              // navigate("/booking");
+      {/* Contact Modal ✅ NEW */}
+      {openContact &&
+        createPortal(
+          <ContactInfoModal
+            open={openContact}
+            setOpen={setOpenContact}
+            loading={false}
+            onSubmit={async (data) => {
+              try {
+                const payload = {
+                  ...data,
+                  checkIn: selectedRange?.startDate?.toISOString(),
+                  checkOut: selectedRange?.endDate?.toISOString(),
+                };
+
+                console.log("SENDING:", payload);
+
+                const res = await fetch("http://localhost:5000/api/book-stay", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(payload),
+                });
+
+                const result = await res.json();
+
+                if (!res.ok) {
+                  throw new Error(result.message || "Booking failed");
+                }
+
+                console.log("SUCCESS:", result);
+
+                setOpenContact(false); // close modal
+              } catch (err) {
+                console.error("ERROR:", err.message);
+              }
             }}
           />,
           document.body,
