@@ -78,28 +78,28 @@ export const updateBooking = async (req, res) => {
       (key) => allowedFields[key] === undefined && delete allowedFields[key]
     );
 
-    const booking = await Booking.findByIdAndUpdate(id, allowedFields, {
-      new: true,
-      runValidators: true,
-    });
+   const booking = await Booking.findById(id);
 
-    if (!booking) {
-      return res.status(404).json({
-        success: false,
-        message: "Booking not found",
-      });
-    }
+if (!booking) {
+  return res.status(404).json({
+    success: false,
+    message: "Booking not found",
+  });
+}
 
-    // auto timestamps for status changes
-    if (allowedFields.status === "confirmed") {
-      booking.confirmedAt = new Date();
-    }
+// update fields
+Object.assign(booking, allowedFields);
 
-    if (allowedFields.status === "cancelled") {
-      booking.cancelledAt = new Date();
-    }
+// timestamps
+if (allowedFields.status === "confirmed") {
+  booking.confirmedAt = new Date();
+}
 
-    await booking.save();
+if (allowedFields.status === "cancelled") {
+  booking.cancelledAt = new Date();
+}
+
+await booking.save();
 
     return res.status(200).json({
       success: true,

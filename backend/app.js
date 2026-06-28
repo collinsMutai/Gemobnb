@@ -78,6 +78,6 @@ app.get("/", (req, res) => {
 // API routes
 app.use("/api", emailRoutes);
 app.use("/api", modalRoutes);
-app.use("/api", bookingRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 export default app;
