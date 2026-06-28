@@ -1,12 +1,14 @@
-// controllers/modalController.js
-
 import { createTransporter } from "../config/mailer.js";
+import Booking from "../models/Booking.js";
 
 export const bookStay = async (req, res) => {
   const transporter = createTransporter();
 
   const { checkIn, checkOut, name, phone, email, guests, notes } = req.body;
 
+  // =========================
+  // VALIDATION
+  // =========================
   if (!checkIn || !checkOut || !name || !phone || !email) {
     return res.status(400).json({
       success: false,
@@ -14,6 +16,9 @@ export const bookStay = async (req, res) => {
     });
   }
 
+  // =========================
+  // FORMAT DATE
+  // =========================
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("en-US", {
       weekday: "short",
@@ -23,9 +28,8 @@ export const bookStay = async (req, res) => {
     });
 
   // =========================
-  // RESERVATION CARD
+  // RESERVATION CARD (UNCHANGED DESIGN)
   // =========================
-
   const bookingBlock = `
     <div
       style="
@@ -120,9 +124,8 @@ export const bookStay = async (req, res) => {
   `;
 
   // =========================
-  // EMAIL LAYOUT
+  // EMAIL WRAPPER (UNCHANGED DESIGN)
   // =========================
-
   const emailWrapper = (title, subtitle, content) => `
     <div style="background:#f8fafc;padding:40px 16px;font-family:Arial,sans-serif;">
       <div
@@ -137,7 +140,6 @@ export const bookStay = async (req, res) => {
         "
       >
 
-        <!-- Brand Header -->
         <div style="background:#0f172a;padding:40px 32px;text-align:center;">
           <div style="color:#ffffff;font-size:36px;font-weight:700;">
             GemoBnB
@@ -147,7 +149,6 @@ export const bookStay = async (req, res) => {
           </div>
         </div>
 
-        <!-- Title -->
         <div style="padding:36px 32px 10px;text-align:center;">
           <h1 style="margin:0;color:#0f172a;font-size:34px;font-weight:700;">
             ${title}
@@ -158,12 +159,10 @@ export const bookStay = async (req, res) => {
           </p>
         </div>
 
-        <!-- Content -->
         <div style="padding:0 32px 40px;">
           ${content}
         </div>
 
-        <!-- Footer (clean only) -->
         <div
           style="
             border-top:1px solid #e2e8f0;
@@ -182,6 +181,25 @@ export const bookStay = async (req, res) => {
   `;
 
   try {
+    // =========================
+    // 1. SAVE BOOKING (PENDING)
+    // =========================
+    const booking = await Booking.create({
+      checkIn,
+      checkOut,
+      name,
+      phone,
+      email,
+      guests,
+      notes,
+      status: "pending",
+      emailSentToAdmin: false,
+      emailSentToGuest: false,
+    });
+
+    // =========================
+    // 2. EMAILS
+    // =========================
     const adminMail = {
       from: process.env.EMAIL_USER,
       replyTo: email,
@@ -205,13 +223,32 @@ export const bookStay = async (req, res) => {
       ),
     };
 
-    await transporter.sendMail(adminMail);
-    await transporter.sendMail(userMail);
+    await Promise.all([
+      transporter.sendMail(adminMail),
+      transporter.sendMail(userMail),
+    ]);
 
+    // =========================
+    // 3. UPDATE BOOKING STATUS
+    // =========================
+    booking.status = "emailed";
+    booking.emailSentToAdmin = true;
+    booking.emailSentToGuest = true;
+    booking.adminEmailSentAt = new Date();
+    booking.guestEmailSentAt = new Date();
+
+    await booking.save();
+
+    // =========================
+    // RESPONSE
+    // =========================
     return res.status(200).json({
       success: true,
       message: "Booking received successfully.",
+      bookingId: booking._id,
+      status: booking.status,
     });
+
   } catch (error) {
     console.error("Booking Error:", error);
 
