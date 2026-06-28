@@ -1,12 +1,19 @@
 // controllers/modalController.js
 
 import { createTransporter } from "../config/mailer.js";
+import Booking from "../models/Booking.js";
+
+// 🔒 TEMP SHARED HOSTING LOCK (prevents duplicate submissions)
+const processing = new Map();
 
 export const bookStay = async (req, res) => {
   const transporter = createTransporter();
 
   const { checkIn, checkOut, name, phone, email, guests, notes } = req.body;
 
+  // =========================
+  // VALIDATION
+  // =========================
   if (!checkIn || !checkOut || !name || !phone || !email) {
     return res.status(400).json({
       success: false,
@@ -14,6 +21,23 @@ export const bookStay = async (req, res) => {
     });
   }
 
+  // =========================
+  // 🔒 DEDUPLICATION KEY
+  // =========================
+  const key = `${email}-${checkIn}-${checkOut}`;
+
+  if (processing.has(key)) {
+    return res.status(429).json({
+      success: false,
+      message: "Booking already in progress. Please wait...",
+    });
+  }
+
+  processing.set(key, true);
+
+  // =========================
+  // FORMAT DATE
+  // =========================
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("en-US", {
       weekday: "short",
@@ -25,7 +49,6 @@ export const bookStay = async (req, res) => {
   // =========================
   // RESERVATION CARD
   // =========================
-
   const bookingBlock = `
     <div
       style="
@@ -37,26 +60,8 @@ export const bookStay = async (req, res) => {
         box-shadow:0 4px 20px rgba(15,23,42,.04);
       "
     >
-      <div
-        style="
-          padding:28px;
-          border-bottom:1px solid #e2e8f0;
-        "
-      >
-        <div
-          style="
-            display:inline-block;
-            padding:8px 14px;
-            border-radius:999px;
-            background:rgba(20,184,166,.12);
-            color:#0f766e;
-            font-size:12px;
-            font-weight:700;
-            text-transform:uppercase;
-            letter-spacing:.05em;
-            margin-bottom:16px;
-          "
-        >
+      <div style="padding:28px;border-bottom:1px solid #e2e8f0;">
+        <div style="display:inline-block;padding:8px 14px;border-radius:999px;background:rgba(20,184,166,.12);color:#0f766e;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:16px;">
           Booking Request Received
         </div>
 
@@ -88,28 +93,20 @@ export const bookStay = async (req, res) => {
 
           <tr>
             <td style="padding:10px 0;color:#64748b;">Email</td>
-            <td style="padding:10px 0;color:#1e293b;">
-              ${email}
-            </td>
+            <td style="padding:10px 0;color:#1e293b;">${email}</td>
           </tr>
 
           <tr>
             <td style="padding:10px 0;color:#64748b;">Phone</td>
-            <td style="padding:10px 0;color:#1e293b;">
-              ${phone}
-            </td>
+            <td style="padding:10px 0;color:#1e293b;">${phone}</td>
           </tr>
 
           ${
             notes
               ? `
           <tr>
-            <td style="padding:10px 0;color:#64748b;vertical-align:top;">
-              Notes
-            </td>
-            <td style="padding:10px 0;color:#1e293b;line-height:1.7;">
-              ${notes}
-            </td>
+            <td style="padding:10px 0;color:#64748b;vertical-align:top;">Notes</td>
+            <td style="padding:10px 0;color:#1e293b;line-height:1.7;">${notes}</td>
           </tr>
           `
               : ""
@@ -120,60 +117,31 @@ export const bookStay = async (req, res) => {
   `;
 
   // =========================
-  // EMAIL LAYOUT
+  // EMAIL WRAPPER
   // =========================
-
   const emailWrapper = (title, subtitle, content) => `
     <div style="background:#f8fafc;padding:40px 16px;font-family:Arial,sans-serif;">
-      <div
-        style="
-          max-width:700px;
-          margin:auto;
-          background:#ffffff;
-          border-radius:24px;
-          overflow:hidden;
-          border:1px solid #e2e8f0;
-          box-shadow:0 10px 30px rgba(15,23,42,.06);
-        "
-      >
+      <div style="max-width:700px;margin:auto;background:#ffffff;border-radius:24px;overflow:hidden;border:1px solid #e2e8f0;box-shadow:0 10px 30px rgba(15,23,42,.06);">
 
-        <!-- Brand Header -->
         <div style="background:#0f172a;padding:40px 32px;text-align:center;">
-          <div style="color:#ffffff;font-size:36px;font-weight:700;">
-            GemoBnB
-          </div>
+          <div style="color:#ffffff;font-size:36px;font-weight:700;">GemoBnB</div>
           <div style="margin-top:10px;color:#cbd5e1;font-size:13px;letter-spacing:.12em;">
             THINDIGUA • KIAMBU ROAD
           </div>
         </div>
 
-        <!-- Title -->
         <div style="padding:36px 32px 10px;text-align:center;">
-          <h1 style="margin:0;color:#0f172a;font-size:34px;font-weight:700;">
-            ${title}
-          </h1>
-
+          <h1 style="margin:0;color:#0f172a;font-size:34px;font-weight:700;">${title}</h1>
           <p style="margin:16px auto 0;max-width:520px;color:#64748b;font-size:16px;line-height:1.7;">
             ${subtitle}
           </p>
         </div>
 
-        <!-- Content -->
         <div style="padding:0 32px 40px;">
           ${content}
         </div>
 
-        <!-- Footer (clean only) -->
-        <div
-          style="
-            border-top:1px solid #e2e8f0;
-            padding:24px;
-            text-align:center;
-            color:#94a3b8;
-            font-size:13px;
-            background:#f8fafc;
-          "
-        >
+        <div style="border-top:1px solid #e2e8f0;padding:24px;text-align:center;color:#94a3b8;font-size:13px;background:#f8fafc;">
           © ${new Date().getFullYear()} GemoBnB. All rights reserved.
         </div>
 
@@ -181,7 +149,20 @@ export const bookStay = async (req, res) => {
     </div>
   `;
 
+  // =========================
+  // MAIN LOGIC
+  // =========================
   try {
+    // Save booking first
+    const booking = await Booking.create({
+      checkIn,
+      checkOut,
+      name,
+      phone,
+      email,
+      guests,
+      notes,
+    });
     const adminMail = {
       from: process.env.EMAIL_USER,
       replyTo: email,
@@ -190,7 +171,7 @@ export const bookStay = async (req, res) => {
       html: emailWrapper(
         "New Booking Request",
         "A guest has submitted a reservation request through the website.",
-        bookingBlock
+        bookingBlock,
       ),
     };
 
@@ -201,16 +182,19 @@ export const bookStay = async (req, res) => {
       html: emailWrapper(
         "Booking Request Received",
         "Thank you for your reservation request. We will confirm availability shortly.",
-        bookingBlock
+        bookingBlock,
       ),
     };
 
-    await transporter.sendMail(adminMail);
-    await transporter.sendMail(userMail);
+    await Promise.all([
+      transporter.sendMail(adminMail),
+      transporter.sendMail(userMail),
+    ]);
 
     return res.status(200).json({
       success: true,
       message: "Booking received successfully.",
+      bookingId: booking._id,
     });
   } catch (error) {
     console.error("Booking Error:", error);
@@ -219,5 +203,8 @@ export const bookStay = async (req, res) => {
       success: false,
       message: "Booking submission failed",
     });
+  } finally {
+    // 🔥 ALWAYS CLEAR LOCK
+    processing.delete(key);
   }
 };

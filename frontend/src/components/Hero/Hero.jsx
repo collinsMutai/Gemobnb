@@ -41,6 +41,7 @@ export default function Hero() {
   const [openContact, setOpenContact] = useState(false); // ✅ NEW
 
   const [selectedRange, setSelectedRange] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [range, setRange] = useState([
     {
@@ -211,16 +212,18 @@ export default function Hero() {
           <ContactInfoModal
             open={openContact}
             setOpen={setOpenContact}
-            loading={false}
+            loading={loading}
             onSubmit={async (data) => {
+              if (loading) return; // 🚫 block double clicks
+
+              setLoading(true);
+
               try {
                 const payload = {
                   ...data,
                   checkIn: selectedRange?.startDate?.toISOString(),
                   checkOut: selectedRange?.endDate?.toISOString(),
                 };
-
-                console.log("SENDING:", payload);
 
                 const res = await fetch("http://localhost:5000/api/book-stay", {
                   method: "POST",
@@ -236,11 +239,11 @@ export default function Hero() {
                   throw new Error(result.message || "Booking failed");
                 }
 
-                console.log("SUCCESS:", result);
-
-                setOpenContact(false); // close modal
+                setOpenContact(false);
               } catch (err) {
                 console.error("ERROR:", err.message);
+              } finally {
+                setLoading(false);
               }
             }}
           />,

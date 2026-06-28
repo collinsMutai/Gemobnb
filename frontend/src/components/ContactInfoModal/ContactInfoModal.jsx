@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdClose } from "react-icons/md";
 import "./ContactInfoModal.css";
@@ -8,8 +9,16 @@ export default function ContactInfoModal({
   onSubmit,
   loading,
 }) {
-  const handleSubmit = (e) => {
+  // 🔒 HARD SUBMIT LOCK
+  const isSubmittingRef = useRef(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 🚫 Prevent double submit
+    if (loading || isSubmittingRef.current) return;
+
+    isSubmittingRef.current = true;
 
     const formData = new FormData(e.target);
 
@@ -21,7 +30,11 @@ export default function ContactInfoModal({
       notes: formData.get("notes"),
     };
 
-    onSubmit(payload);
+    try {
+      await onSubmit(payload);
+    } finally {
+      isSubmittingRef.current = false;
+    }
   };
 
   return (
@@ -70,7 +83,7 @@ export default function ContactInfoModal({
                 />
               </div>
 
-              {/* EMAIL + PHONE (ROW LIKE OTHER MODALS STYLE) */}
+              {/* EMAIL + PHONE */}
               <div className="form-row">
                 <div className="form-group">
                   <label>Email</label>
@@ -115,12 +128,13 @@ export default function ContactInfoModal({
                 />
               </div>
 
-              {/* ACTIONS (MATCHES CONFIRMATION MODAL) */}
+              {/* ACTIONS */}
               <div className="contact-actions">
                 <button
                   type="button"
                   className="btn-secondary"
                   onClick={() => setOpen(false)}
+                  disabled={loading}
                 >
                   Back
                 </button>
