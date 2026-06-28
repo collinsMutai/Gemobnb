@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaCalendarAlt } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
+// import { MdClose } from "react-icons/md";
 import { createPortal } from "react-dom";
 
 import CalendarModal from "../CalendarModal/CalendarModal";
@@ -97,20 +97,7 @@ export default function Hero() {
     setSelectedRange(null);
   };
 
-  const hasSelection = range[0]?.startDate && range[0]?.endDate;
-
-  const renderDateText = () => {
-    const { startDate, endDate } = range[0];
-
-    if (!startDate) return "Select dates";
-
-    if (startDate && !endDate) {
-      return `${startDate.toLocaleDateString()} →`;
-    }
-
-    return `${startDate.toLocaleDateString()} → ${endDate.toLocaleDateString()}`;
-  };
-
+  
   const slide = currentSlide;
 
   return (
@@ -155,17 +142,9 @@ export default function Hero() {
               >
                 <FaCalendarAlt className="input-icon-left" />
 
-                <div className="date-text">{renderDateText()}</div>
+                <div className="date-text">Select dates</div>
 
-                {hasSelection && (
-                  <button
-                    type="button"
-                    className="clear-dates-btn"
-                    onClick={clearDates}
-                  >
-                    <MdClose />
-                  </button>
-                )}
+              
               </div>
             </div>
           </motion.div>
@@ -213,39 +192,52 @@ export default function Hero() {
             open={openContact}
             setOpen={setOpenContact}
             loading={loading}
-            onSubmit={async (data) => {
-              if (loading) return; // 🚫 block double clicks
+           onSubmit={async (data) => {
+  if (loading) return;
 
-              setLoading(true);
+  setLoading(true);
 
-              try {
-                const payload = {
-                  ...data,
-                  checkIn: selectedRange?.startDate?.toISOString(),
-                  checkOut: selectedRange?.endDate?.toISOString(),
-                };
+  try {
+    const payload = {
+      ...data,
+      checkIn: selectedRange?.startDate?.toISOString(),
+      checkOut: selectedRange?.endDate?.toISOString(),
+    };
 
-                const res = await fetch("http://localhost:5000/api/book-stay", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(payload),
-                });
+    const res = await fetch("http://localhost:5000/api/book-stay", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-                const result = await res.json();
+    const result = await res.json();
 
-                if (!res.ok) {
-                  throw new Error(result.message || "Booking failed");
-                }
+    if (!res.ok) {
+      throw new Error(result.message || "Booking failed");
+    }
 
-                setOpenContact(false);
-              } catch (err) {
-                console.error("ERROR:", err.message);
-              } finally {
-                setLoading(false);
-              }
-            }}
+    // ✅ success flow
+    setOpenContact(false);
+    setSelectedRange(null);
+    setRange([
+      {
+        startDate: null,
+        endDate: null,
+        key: "selection",
+      },
+    ]);
+
+  } catch (err) {
+    console.error("ERROR:", err.message);
+
+    // optional: keep modal open so user can retry
+    alert(err.message || "Booking failed. Try again.");
+  } finally {
+    setLoading(false);
+  }
+}}
           />,
           document.body,
         )}
