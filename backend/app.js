@@ -4,6 +4,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import emailRoutes from "./routes/emailRoutes.js";
 import modalRoutes from "./routes/modalRoutes.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 
 const app = express();
@@ -77,5 +78,6 @@ app.get("/", (req, res) => {
 // API routes
 app.use("/api", emailRoutes);
 app.use("/api", modalRoutes);
+app.use("/api", bookingRoutes);
 
 export default app;
