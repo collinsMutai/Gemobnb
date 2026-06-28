@@ -191,6 +191,12 @@ export const bookStay = async (req, res) => {
       transporter.sendMail(userMail),
     ]);
 
+    // =========================
+    // UPDATE STATUS
+    // =========================
+    booking.status = "confirmed";
+    await booking.save();
+
     return res.status(200).json({
       success: true,
       message: "Booking received successfully.",
@@ -201,10 +207,9 @@ export const bookStay = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Booking submission failed",
+      message: "Booking submission failed.",
     });
   } finally {
-    // 🔥 ALWAYS CLEAR LOCK
     processing.delete(key);
   }
 };

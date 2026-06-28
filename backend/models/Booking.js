@@ -43,15 +43,59 @@ const bookingSchema = new mongoose.Schema(
       trim: true,
     },
 
+    // Booking lifecycle
     status: {
       type: String,
       enum: ["pending", "confirmed", "cancelled"],
       default: "pending",
     },
+
+    // Email tracking
+    emailSentToAdmin: {
+      type: Boolean,
+      default: false,
+    },
+
+    emailSentToGuest: {
+      type: Boolean,
+      default: false,
+    },
+
+    adminEmailSentAt: {
+      type: Date,
+      default: null,
+    },
+
+    guestEmailSentAt: {
+      type: Date,
+      default: null,
+    },
+
+    // Optional admin information
+    confirmedAt: {
+      type: Date,
+      default: null,
+    },
+
+    cancelledAt: {
+      type: Date,
+      default: null,
+    },
+
+    cancellationReason: {
+      type: String,
+      default: "",
+      trim: true,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
+
+// Helpful indexes
+bookingSchema.index({ email: 1 });
+bookingSchema.index({ status: 1 });
+bookingSchema.index({ createdAt: -1 });
 
 export default mongoose.model("Booking", bookingSchema);
