@@ -46,7 +46,12 @@ const bookingSchema = new mongoose.Schema(
     // Booking lifecycle
     status: {
       type: String,
-      enum: ["pending", "confirmed", "cancelled"],
+      enum: [
+        "pending", // Booking created
+        "emailed", // Emails successfully sent
+        "confirmed", // Admin accepted booking
+        "cancelled",
+      ],
       default: "pending",
     },
 
