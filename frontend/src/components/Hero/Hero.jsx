@@ -97,7 +97,6 @@ export default function Hero() {
     setSelectedRange(null);
   };
 
-  
   const slide = currentSlide;
 
   return (
@@ -143,8 +142,6 @@ export default function Hero() {
                 <FaCalendarAlt className="input-icon-left" />
 
                 <div className="date-text">Select dates</div>
-
-              
               </div>
             </div>
           </motion.div>
@@ -192,52 +189,53 @@ export default function Hero() {
             open={openContact}
             setOpen={setOpenContact}
             loading={loading}
-           onSubmit={async (data) => {
-  if (loading) return;
+            onSubmit={async (data) => {
+              if (loading) return;
 
-  setLoading(true);
+              setLoading(true);
 
-  try {
-    const payload = {
-      ...data,
-      checkIn: selectedRange?.startDate?.toISOString(),
-      checkOut: selectedRange?.endDate?.toISOString(),
-    };
+              try {
+                const payload = {
+                  ...data,
+                  checkIn: selectedRange?.startDate?.toISOString(),
+                  checkOut: selectedRange?.endDate?.toISOString(),
+                };
 
-    const res = await fetch("http://localhost:5000/api/book-stay", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+                const res = await fetch(
+                  `${import.meta.env.VITE_API_URL}/api/book-stay`,
+                   {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(payload),
+                });
 
-    const result = await res.json();
+                const result = await res.json();
 
-    if (!res.ok) {
-      throw new Error(result.message || "Booking failed");
-    }
+                if (!res.ok) {
+                  throw new Error(result.message || "Booking failed");
+                }
 
-    // ✅ success flow
-    setOpenContact(false);
-    setSelectedRange(null);
-    setRange([
-      {
-        startDate: null,
-        endDate: null,
-        key: "selection",
-      },
-    ]);
+                // ✅ success flow
+                setOpenContact(false);
+                setSelectedRange(null);
+                setRange([
+                  {
+                    startDate: null,
+                    endDate: null,
+                    key: "selection",
+                  },
+                ]);
+              } catch (err) {
+                console.error("ERROR:", err.message);
 
-  } catch (err) {
-    console.error("ERROR:", err.message);
-
-    // optional: keep modal open so user can retry
-    alert(err.message || "Booking failed. Try again.");
-  } finally {
-    setLoading(false);
-  }
-}}
+                // optional: keep modal open so user can retry
+                alert(err.message || "Booking failed. Try again.");
+              } finally {
+                setLoading(false);
+              }
+            }}
           />,
           document.body,
         )}
