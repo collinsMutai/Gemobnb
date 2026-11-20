@@ -1,23 +1,27 @@
 import { useState } from "react";
 import "./Gallery.css";
 
-const images = [
-  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
-  "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcbG70SerOvmn_h50fEeSe00EVy7VfUH4STvXVhqvpZw&s",
-  "https://images.unsplash.com/photo-1501183638710-841dd1904471",
-  "https://images.unsplash.com/photo-1445019980597-93fa8acb246c",
-  "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-  "https://images.unsplash.com/photo-1493809842364-78817add7ffb",
-  "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6",
-];
+// Automatically import images from assets
+const imageModules = import.meta.glob("../../assets/img*", {
+  eager: true,
+  import: "default",
+  query: "?url",
+});
+
+// Sort images numerically: img1, img2, ... img29
+const images = Object.entries(imageModules)
+  .sort((a, b) => {
+    const numA = Number(a[0].match(/img(\d+)/)?.[1]);
+    const numB = Number(b[0].match(/img(\d+)/)?.[1]);
+    return numA - numB;
+  })
+  .map(([, src]) => src);
 
 export default function Gallery() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <section className="gallery-section" id="gallery">
-
       {/* HEADER */}
       <div className="gallery-header">
         <span className="section-tag">Gallery</span>
@@ -32,23 +36,33 @@ export default function Gallery() {
 
       {/* GALLERY BODY */}
       <div className="gallery">
+        {/* MAIN IMAGE */}
         <div className="gallery__hero">
-          <img
-            src={images[activeIndex]}
-            alt={`GemoBnB stay ${activeIndex + 1}`}
-          />
+          {images.length > 0 && (
+            <img
+              src={images[activeIndex]}
+              alt={`GemoBnB stay ${activeIndex + 1}`}
+            />
+          )}
         </div>
 
+        {/* THUMBNAILS */}
         <div className="gallery__grid">
           {images.map((img, index) => (
             <button
-              key={index}
+              key={img}
               className={`gallery__thumb ${
                 index === activeIndex ? "active" : ""
               }`}
               onClick={() => setActiveIndex(index)}
+              aria-label={`View image ${index + 1}`}
+              aria-pressed={index === activeIndex}
             >
-              <img src={img} alt={`Thumbnail ${index + 1}`} />
+              <img
+                src={img}
+                alt={`GemoBnB thumbnail ${index + 1}`}
+                loading="lazy"
+              />
             </button>
           ))}
         </div>

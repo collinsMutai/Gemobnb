@@ -1,4 +1,6 @@
 import "./Experience.css";
+import img17 from "../../assets/img17.jpeg";
+import img27 from "../../assets/img27.jpeg";
 
 const experiences = [
   {
@@ -18,14 +20,14 @@ const experiences = [
   {
     title: "Cozy Evenings",
     image:
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1200&q=80",
+      img17,
     description:
       "Soft lighting, comfortable furnishings, and a relaxing atmosphere make every evening memorable.",
   },
   {
     title: "Feel at Home",
     image:
-      "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/parallax-04.jpg",
+      img27,
     description:
       "Thoughtfully designed spaces that balance comfort, productivity, and modern living.",
   },

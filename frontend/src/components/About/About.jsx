@@ -1,5 +1,7 @@
 import "./About.css";
 import { CheckCircle } from "lucide-react";
+import img21 from "../../assets/img21.jpeg";
+
 
 const features = [
   "Modern & fully furnished apartment",
@@ -43,7 +45,7 @@ export default function About() {
 
       <div className="about-image">
         <img
-          src="https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/room-03-1024x683.jpg"
+          src={img21}
           alt="GemoBnB apartment interior"
         />
       </div>

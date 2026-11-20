@@ -1,12 +1,22 @@
+
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaCalendarAlt } from "react-icons/fa";
-// import { MdClose } from "react-icons/md";
 import { createPortal } from "react-dom";
 
 import CalendarModal from "../CalendarModal/CalendarModal";
 import DateConfirmationModal from "../DateConfirmationModal/DateConfirmationModal";
 import ContactInfoModal from "../ContactInfoModal/ContactInfoModal";
+
+import img11 from "../../assets/img11.jpeg";
+import img14 from "../../assets/img14.jpeg";
+import img15 from "../../assets/img15.jpeg";
+import img21 from "../../assets/img21.jpeg";
+import img22 from "../../assets/img22.jpeg";
+import img25 from "../../assets/img25.jpeg";
+import img26 from "../../assets/img26.jpeg";
+import img27 from "../../assets/img27.jpeg";
+import img29 from "../../assets/img29.jpeg";
 
 import "./Hero.css";
 
@@ -15,20 +25,47 @@ export default function Hero() {
     {
       title: "Luxury Stays in Nairobi",
       text: "Modern, stylish, and fully serviced apartments in the heart of Westlands.",
-      image:
-        "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/room-03-1024x683.jpg",
+      image: img11,
     },
     {
       title: "Comfort Meets Convenience",
       text: "Enjoy fast WiFi, secure parking, and 24/7 guest support.",
-      image:
-        "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/parallax-04.jpg",
+      image: img14,
     },
     {
       title: "Your Home in Nairobi",
       text: "Perfect for business trips, long stays, or weekend getaways.",
-      image:
-        "https://www.nicdarkthemes.com/themes/hotel-booking/wp/demo/apartment/wp-content/uploads/sites/13/2023/07/square-06.jpg",
+      image: img15,
+    },
+    {
+      title: "Experience Modern Living",
+      text: "Beautifully designed spaces that make every stay memorable.",
+      image: img21,
+    },
+    {
+      title: "Relax in Style",
+      text: "Discover comfort, privacy, and elegance in every corner.",
+      image: img22,
+    },
+    {
+      title: "Stay. Relax. Enjoy.",
+      text: "Everything you need for a comfortable and relaxing getaway.",
+      image: img25,
+    },
+    {
+      title: "Designed for Your Comfort",
+      text: "Enjoy thoughtfully furnished spaces with a touch of luxury.",
+      image: img26,
+    },
+    {
+      title: "Feel at Home",
+      text: "Your perfect space for relaxation, work, and unforgettable moments.",
+      image: img27,
+    },
+    {
+      title: "Your Perfect Nairobi Escape",
+      text: "Book your stay and experience comfort like never before.",
+      image: img29,
     },
   ];
 
@@ -38,7 +75,7 @@ export default function Hero() {
 
   const [openCalendar, setOpenCalendar] = useState(false);
   const [openConfirmation, setOpenConfirmation] = useState(false);
-  const [openContact, setOpenContact] = useState(false); // ✅ NEW
+  const [openContact, setOpenContact] = useState(false);
 
   const [selectedRange, setSelectedRange] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -82,8 +119,17 @@ export default function Hero() {
     timeout = setTimeout(run, 7000);
 
     return () => clearTimeout(timeout);
-  }, [index, currentSlide, openCalendar, openConfirmation, openContact]);
+  }, [
+    index,
+    currentSlide,
+    openCalendar,
+    openConfirmation,
+    openContact,
+  ]);
 
+  /* =========================
+     CLEAR SELECTED DATES
+  ========================= */
   const clearDates = (e) => {
     e?.stopPropagation();
 
@@ -101,11 +147,15 @@ export default function Hero() {
 
   return (
     <section className="hero-container">
+
       {/* BACKGROUND */}
       <div className="hero-bg-wrapper">
+
         <motion.div
           className="hero-bg"
-          style={{ backgroundImage: `url(${prevSlide.image})` }}
+          style={{
+            backgroundImage: `url(${prevSlide.image})`,
+          }}
           animate={{ opacity: 0 }}
           transition={{ duration: 1 }}
         />
@@ -113,11 +163,14 @@ export default function Hero() {
         <motion.div
           key={currentSlide.image}
           className="hero-bg"
-          style={{ backgroundImage: `url(${currentSlide.image})` }}
+          style={{
+            backgroundImage: `url(${currentSlide.image})`,
+          }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
         />
+
       </div>
 
       {/* CONTENT */}
@@ -131,8 +184,13 @@ export default function Hero() {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="hero-title">{slide.title}</h1>
-            <p className="hero-text">{slide.text}</p>
+            <h1 className="hero-title">
+              {slide.title}
+            </h1>
+
+            <p className="hero-text">
+              {slide.text}
+            </p>
 
             <div className="search-box single-date">
               <div
@@ -141,14 +199,17 @@ export default function Hero() {
               >
                 <FaCalendarAlt className="input-icon-left" />
 
-                <div className="date-text">Select dates</div>
+                <div className="date-text">
+                  Select dates
+                </div>
               </div>
             </div>
+
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Calendar Modal */}
+      {/* CALENDAR MODAL */}
       {openCalendar &&
         createPortal(
           <CalendarModal
@@ -163,10 +224,10 @@ export default function Hero() {
               setOpenConfirmation(true);
             }}
           />,
-          document.body,
+          document.body
         )}
 
-      {/* Confirmation Modal */}
+      {/* CONFIRMATION MODAL */}
       {openConfirmation &&
         selectedRange &&
         createPortal(
@@ -175,14 +236,14 @@ export default function Hero() {
             setOpen={setOpenConfirmation}
             range={selectedRange}
             onContinue={() => {
-              setOpenConfirmation(false); // ✅ close current
-              setOpenContact(true); // ✅ open next
+              setOpenConfirmation(false);
+              setOpenContact(true);
             }}
           />,
-          document.body,
+          document.body
         )}
 
-      {/* Contact Modal ✅ NEW */}
+      {/* CONTACT MODAL */}
       {openContact &&
         createPortal(
           <ContactInfoModal
@@ -203,23 +264,26 @@ export default function Hero() {
 
                 const res = await fetch(
                   `${import.meta.env.VITE_API_URL}/api/book-stay`,
-                   {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(payload),
-                });
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                  }
+                );
 
                 const result = await res.json();
 
                 if (!res.ok) {
-                  throw new Error(result.message || "Booking failed");
+                  throw new Error(
+                    result.message || "Booking failed"
+                  );
                 }
 
-                // ✅ success flow
                 setOpenContact(false);
                 setSelectedRange(null);
+
                 setRange([
                   {
                     startDate: null,
@@ -227,18 +291,22 @@ export default function Hero() {
                     key: "selection",
                   },
                 ]);
+
               } catch (err) {
                 console.error("ERROR:", err.message);
 
-                // optional: keep modal open so user can retry
-                alert(err.message || "Booking failed. Try again.");
+                alert(
+                  err.message || "Booking failed. Try again."
+                );
+
               } finally {
                 setLoading(false);
               }
             }}
           />,
-          document.body,
+          document.body
         )}
+
     </section>
   );
 }
