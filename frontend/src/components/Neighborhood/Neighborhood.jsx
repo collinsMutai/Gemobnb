@@ -2,6 +2,33 @@ import "./Neighborhood.css";
 
 const places = [
   {
+    title: "Runda Mall",
+    category: "Shopping",
+    image:
+      "https://images.unsplash.com/photo-1519567241046-7f570eee3ce6?w=740&q=80",
+    description:
+      "Enjoy convenient shopping, restaurants, cafés, and everyday essentials.",
+    distance: "5 mins drive",
+  },
+  {
+    title: "Ridgeways Mall",
+    category: "Shopping & Lifestyle",
+    image:
+      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=740&q=80",
+    description:
+      "Explore shopping outlets, restaurants, supermarkets, and entertainment.",
+    distance: "5 mins drive",
+  },
+  {
+    title: "Local Churches",
+    category: "Worship & Community",
+    image:
+      "https://images.unsplash.com/photo-1438032005730-c779502df39b?w=740&q=80",
+    description:
+      "Convenient access to nearby churches and welcoming worship communities.",
+    distance: "5–10 mins drive",
+  },
+  {
     title: "Nairobi Skyline",
     category: "City Views",
     image:

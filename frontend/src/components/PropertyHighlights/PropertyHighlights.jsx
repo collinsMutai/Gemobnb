@@ -11,7 +11,7 @@ import {
 const highlights = [
   {
     icon: <Bed size={28} />,
-    value: "1 Bedroom",
+    value: "1 or 2 Bedroom options",
     label: "Modern & Comfortable",
   },
   {

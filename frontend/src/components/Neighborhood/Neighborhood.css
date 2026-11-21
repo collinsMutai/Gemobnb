@@ -86,10 +86,10 @@
 .place-meta {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-
+  align-items: flex-start;
+flex-wrap: wrap;
   margin-bottom: 0.75rem;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* CATEGORY BADGE */
@@ -99,23 +99,30 @@
   background: rgba(20, 184, 166, 0.12);
   color: var(--secondary);
 
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.65rem;
   border-radius: 999px;
 
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
 
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  line-height: 1.4;
 }
 
 /* DISTANCE INLINE */
 .place-distance-inline {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--primary);
   opacity: 0.7;
 
-  white-space: nowrap;
+  white-space: normal;
+  text-align: right;
+  flex-shrink: 1;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 /* ======================
@@ -148,7 +155,8 @@
   }
 
   .place-meta {
-    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: 8px;
   }
 }
